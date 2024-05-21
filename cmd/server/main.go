@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"github.com/xbmlz/gin-svelte-template/pkg/logger"
+)
 
 func main() {
-	fmt.Println("Hello, world!")
+	// fx.New(
+	// 	bootstrap.Modules,
+	// ).Run()
+	log := logger.NewLogger(
+		logger.DebugLevel,
+	)
+
+	log.Info("Server started")
 }
