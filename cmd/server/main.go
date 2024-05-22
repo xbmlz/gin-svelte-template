@@ -7,7 +7,7 @@ import (
 
 func main() {
 	fx.New(
-		bootstrap.Options,
+		bootstrap.Module,
 		fx.NopLogger,
 	).Run()
 }
