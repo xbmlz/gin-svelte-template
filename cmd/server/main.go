@@ -1,5 +1,13 @@
 package main
 
-func main() {
+import (
+	"github.com/xbmlz/gin-svelte-template/internal/bootstrap"
+	"go.uber.org/fx"
+)
 
+func main() {
+	fx.New(
+		bootstrap.Options,
+		fx.NopLogger,
+	).Run()
 }
