@@ -1,19 +1,51 @@
 package logger
 
 import (
+	"os"
+	"path"
+	"strings"
+	"time"
+
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/xbmlz/gin-svelte-template/internal/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"os"
-	"path"
-	"time"
 )
 
-type Logger struct {
-	log  *zap.Logger
-	slog *zap.SugaredLogger
+// A Level is a logging priority. Higher levels are more important.
+type Level int8
+
+// Logger logger interface
+type ILogger interface {
+	Debug(v ...any)
+	Debugf(format string, v ...any)
+	Info(v ...any)
+	Infof(format string, v ...any)
+	Warn(v ...any)
+	Warnf(format string, v ...any)
+	Error(v ...any)
+	Errorf(format string, v ...any)
 }
+
+type Logger struct {
+	level Level
+	log   *zap.Logger
+	slog  *zap.SugaredLogger
+}
+
+const (
+	// DebugLevel logs are typically voluminous, and are usually disabled in
+	// production.
+	DebugLevel Level = iota
+	// InfoLevel is the default logging priority.
+	InfoLevel
+	// WarnLevel logs are more important than Info, but don't need individual
+	// human review.
+	WarnLevel
+	// ErrorLevel logs are high-priority. If an application is running smoothly,
+	// it shouldn't generate any error-level logs.
+	ErrorLevel
+)
 
 func NewLogger(conf config.Config) Logger {
 	logPath := conf.Log.Path
@@ -41,8 +73,9 @@ func NewLogger(conf config.Config) Logger {
 	}
 
 	return Logger{
-		log:  logger,
-		slog: logger.Sugar(),
+		level: ParseLevel(conf.Log.Level),
+		log:   logger,
+		slog:  logger.Sugar(),
 	}
 }
 
@@ -117,4 +150,90 @@ func customCallerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayE
 // timeEncoder format time
 func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.Format("2006-01-02 15:04:05.000"))
+}
+
+func (l Level) String() string {
+	switch l {
+	case DebugLevel:
+		return "DEBUG"
+	case InfoLevel:
+		return "INFO"
+	case WarnLevel:
+		return "WARN"
+	case ErrorLevel:
+		return "ERROR"
+	default:
+		return ""
+	}
+}
+
+// ParseLevel parses a level string into a logger Level value.
+func ParseLevel(s string) Level {
+	switch strings.ToUpper(s) {
+	case "DEBUG":
+		return DebugLevel
+	case "INFO":
+		return InfoLevel
+	case "WARN":
+		return WarnLevel
+	case "ERROR":
+		return ErrorLevel
+	}
+	return InfoLevel
+}
+
+// Debug log
+func (z *Logger) Debug(v ...any) {
+	if z.level <= DebugLevel {
+		z.slog.Debug(v...)
+	}
+}
+
+// Debugf log
+func (z *Logger) Debugf(format string, v ...any) {
+	if z.level <= DebugLevel {
+		z.slog.Debugf(format, v...)
+	}
+}
+
+// Info log
+func (z *Logger) Info(v ...any) {
+	if z.level <= InfoLevel {
+		z.slog.Info(v...)
+	}
+}
+
+// Infof log
+func (z *Logger) Infof(format string, v ...any) {
+	if z.level <= InfoLevel {
+		z.slog.Infof(format, v...)
+	}
+}
+
+// Warn log
+func (z *Logger) Warn(v ...any) {
+	if z.level <= WarnLevel {
+		z.slog.Warn(v...)
+	}
+}
+
+// Warnf log
+func (z *Logger) Warnf(format string, v ...any) {
+	if z.level <= WarnLevel {
+		z.slog.Warnf(format, v...)
+	}
+}
+
+// Error log
+func (z *Logger) Error(v ...any) {
+	if z.level <= ErrorLevel {
+		z.slog.Error(v...)
+	}
+}
+
+// Errorf log
+func (z *Logger) Errorf(format string, v ...any) {
+	if z.level <= ErrorLevel {
+		z.slog.Errorf(format, v...)
+	}
 }
