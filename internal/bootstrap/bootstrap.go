@@ -4,28 +4,45 @@ import (
 	"context"
 
 	"github.com/xbmlz/gin-svelte-template/internal/logger"
+	"github.com/xbmlz/gin-svelte-template/internal/server"
 
 	"github.com/xbmlz/gin-svelte-template/internal/config"
 	"go.uber.org/fx"
 )
 
 var Module = fx.Options(
-	fx.Provide(config.LoadConfig),
-	fx.Provide(logger.NewLogger),
+	fx.Provide(
+		config.NewConfig,
+		logger.NewLogger,
+		server.NewHTTPServer,
+	),
 	// invoke
 	fx.Invoke(bootstrap),
 )
 
-func bootstrap(lc fx.Lifecycle, config config.Config, log logger.Logger) {
+func bootstrap(
+	lc fx.Lifecycle,
+	config config.Config,
+	log logger.Logger,
+	httpSrv server.HTTPServer,
+) {
+
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			// do something
-			log.Info("app start")
+			log.Info("Starting app...")
+
+			go func() {
+				if err := httpSrv.Start(); err != nil {
+					log.Errorf("Failed to start http server: %v", err)
+				}
+			}()
+
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
-			// do something
-			log.Info("app stop")
+			log.Info("Stopping app...")
+
+			httpSrv.Shutdown()
 			return nil
 		},
 	})

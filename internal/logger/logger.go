@@ -79,6 +79,10 @@ func NewLogger(conf config.Config) Logger {
 	}
 }
 
+func (l Logger) GetZapLogger() *zap.Logger {
+	return l.log
+}
+
 func createConsoleCore(callerFullPath bool) zapcore.Core {
 	consoleDebugging := zapcore.Lock(os.Stdout)
 	consoleEncoderConfig := zap.NewDevelopmentEncoderConfig()

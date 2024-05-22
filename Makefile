@@ -1,4 +1,4 @@
 run:
-	@go run ./cmd/server
+	GIN_MODE=debug go run ./cmd/server
 
 .PHONY: run
