@@ -8,35 +8,47 @@ import (
 )
 
 type LogConfig struct {
-	Path           string `mapstructure:"Path" yaml:"path"`
-	Name           string `mapstructure:"Name" yaml:"name"`
-	Level          string `mapstructure:"Level" yaml:"level"`
-	MaxAge         int    `mapstructure:"MaxAge" yaml:"max_age"`
-	RotationTime   int    `mapstructure:"RotationTime" yaml:"rotation_time"`
-	CallerFullPath bool   `mapstructure:"CallerFullPath" yaml:"caller_full_path"`
+	Path           string `mapstructure:"path" yaml:"path"`
+	Name           string `mapstructure:"path" yaml:"name"`
+	Level          string `mapstructure:"level" yaml:"level"`
+	MaxAge         int    `mapstructure:"max_age" yaml:"max_age"`
+	RotationTime   int    `mapstructure:"rotation_time" yaml:"rotation_time"`
+	CallerFullPath bool   `mapstructure:"caller_full_path" yaml:"caller_full_path"`
 }
 
 type HTTPConfig struct {
-	Host string `mapstructure:"Host" yaml:"host" validate:"ipv4"`
-	Port int    `mapstructure:"Port" yaml:"port" validate:"gte=1,lte=65535"`
+	Host string `mapstructure:"host" yaml:"host" validate:"ipv4"`
+	Port int    `mapstructure:"port" yaml:"port" validate:"gte=1,lte=65535"`
+}
+
+type DBConfig struct {
+	Driver string `mapstructure:"driver" yaml:"driver"`
+	DSN    string `mapstructure:"dsn" yaml:"dsn"`
 }
 
 type Config struct {
-	Log  *LogConfig  `mapstructure:"Log"`
-	HTTP *HTTPConfig `mapstructure:"HTTP"`
+	Log  *LogConfig  `mapstructure:"log" yaml:"log"`
+	HTTP *HTTPConfig `mapstructure:"http" yaml:"http"`
+	DB   *DBConfig   `mapstructure:"database" yaml:"database"`
 }
 
-var configPath = "config.yaml"
+var configPath = "config/config.yaml"
 
 var defaultConfig = Config{
 	Log: &LogConfig{
-		Path:  "logs",
-		Name:  "app.log",
-		Level: "debug",
+		Path:         "logs",
+		Name:         "app.log",
+		Level:        "debug",
+		MaxAge:       24 * 7,
+		RotationTime: 24,
 	},
 	HTTP: &HTTPConfig{
 		Host: "0.0.0.0",
 		Port: 8765,
+	},
+	DB: &DBConfig{
+		Driver: "sqlite",
+		DSN:    "./db.sqlite",
 	},
 }
 

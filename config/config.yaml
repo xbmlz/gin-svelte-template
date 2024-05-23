@@ -1,0 +1,14 @@
+http:
+  host: 0.0.0.0
+  port: 8765
+
+log:
+  path: logs
+  name: app.log
+  level: debug
+  max_age: 168
+  rotation_time: 24
+
+db:
+  driver: sqlite
+  url: ./db.sqlite

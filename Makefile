@@ -15,10 +15,13 @@ install:
 	@$(GO) install github.com/swaggo/swag/cmd/swag@latest
 
 run:
-	GIN_MODE=debug @$(GO) run $(MAIN_PKG)
+	GIN_MODE=debug @$(GO) run $(MAIN_PKG) run
 
 build:
 	@$(GO) build $(GO_FLAGS) -o $(BIN) $(MAIN_PKG)
 
 swag:
 	@swag init -g ./cmd/main.go -o ./docs --parseDependency
+
+migrate:
+	@$(GO) run $(MAIN_PKG) migrate
