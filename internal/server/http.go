@@ -3,11 +3,14 @@ package server
 import (
 	"context"
 	"errors"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/xbmlz/gin-svelte-template/docs"
 	"net/http"
 	"time"
 
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
 	"github.com/xbmlz/gin-svelte-template/internal/config"
 	"github.com/xbmlz/gin-svelte-template/internal/logger"
 )
@@ -29,6 +32,15 @@ func NewHTTPServer(log logger.Logger, conf config.Config) HTTPServer {
 	engine.Use(ginzap.Ginzap(zapLogger, time.DateTime, true))
 
 	engine.Use(ginzap.RecoveryWithZap(zapLogger, true))
+
+	// swagger doc
+	docs.SwaggerInfo.Host = conf.HTTP.ListenAddr()
+	docs.SwaggerInfo.BasePath = "/v1"
+	engine.GET("/swagger/*any", ginSwagger.WrapHandler(
+		swaggerfiles.Handler,
+		//ginSwagger.URL(fmt.Sprintf("http://localhost:%d/swagger/doc.json", conf.GetInt("app.http.port"))),
+		ginSwagger.DefaultModelsExpandDepth(-1),
+	))
 
 	engine.GET("/ping", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{

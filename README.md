@@ -8,13 +8,15 @@
 - [x] validator
 - [x] gin
 - [x] cobra
-- [ ] swag
+- [x] swag
 - [ ] gorm
 - [ ] gorm-gen
 - [ ] casbin
 - [ ] jwt
+- [ ] embed frontend
 
 ## frontend
 
 - [ ] svelte
 - [ ] svelte-kit
+
