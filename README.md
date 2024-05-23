@@ -10,7 +10,7 @@
 - [x] cobra
 - [x] swag
 - [x] gorm
-- [x] gorm-gen
+- [x] gorm-gen(remove)
 - [ ] jwt
 - [ ] casbin
 - [ ] embed frontend

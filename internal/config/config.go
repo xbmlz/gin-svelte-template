@@ -26,10 +26,25 @@ type DBConfig struct {
 	DSN    string `mapstructure:"dsn" yaml:"dsn"`
 }
 
+type RedisConfig struct {
+	Host     string `mapstructure:"host" yaml:"host"`
+	Port     int    `mapstructure:"port" yaml:"port"`
+	Password string `mapstructure:"password" yaml:"password"`
+	DB       int    `mapstructure:"db" yaml:"db"`
+	PoolSize int    `mapstructure:"pool_size" yaml:"pool_size"`
+}
+
+type JWTConfig struct {
+	Secret     string `mapstructure:"secret" yaml:"secret"`
+	ExpireTime int64  `mapstructure:"expire_time" yaml:"expire_time"`
+}
+
 type Config struct {
-	Log  *LogConfig  `mapstructure:"log" yaml:"log"`
-	HTTP *HTTPConfig `mapstructure:"http" yaml:"http"`
-	DB   *DBConfig   `mapstructure:"database" yaml:"database"`
+	Log   *LogConfig   `mapstructure:"log" yaml:"log"`
+	HTTP  *HTTPConfig  `mapstructure:"http" yaml:"http"`
+	DB    *DBConfig    `mapstructure:"database" yaml:"database"`
+	Redis *RedisConfig `mapstructure:"redis" yaml:"redis"`
+	JWT   *JWTConfig   `mapstructure:"jwt" yaml:"jwt"`
 }
 
 var configPath = "config/config.yaml"
@@ -49,6 +64,17 @@ var defaultConfig = Config{
 	DB: &DBConfig{
 		Driver: "sqlite",
 		DSN:    "./db.sqlite",
+	},
+	Redis: &RedisConfig{
+		Host:     "127.0.0.1",
+		Port:     6379,
+		Password: "",
+		DB:       0,
+		PoolSize: 10,
+	},
+	JWT: &JWTConfig{
+		Secret:     "secret",
+		ExpireTime: 3600 * 24 * 7,
 	},
 }
 
@@ -70,6 +96,14 @@ func NewConfig() Config {
 func (a *HTTPConfig) ListenAddr() string {
 	if err := validator.New().Struct(a); err != nil {
 		return defaultConfig.HTTP.ListenAddr()
+	}
+
+	return fmt.Sprintf("%s:%d", a.Host, a.Port)
+}
+
+func (a *RedisConfig) Addr() string {
+	if err := validator.New().Struct(a); err != nil {
+		return defaultConfig.Redis.Addr()
 	}
 
 	return fmt.Sprintf("%s:%d", a.Host, a.Port)

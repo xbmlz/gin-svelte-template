@@ -3,7 +3,6 @@
 VERSION=1.0.0
 BIN=./bin/server
 APP_MAIN=./cmd/server
-GEN_MAIN=./cmd/gen
 GO_MODULE=github.com/xbmlz/gin-svelte-template
 
 GO_ENV=CGO_ENABLED=0 GO111MODULE=on
@@ -15,7 +14,7 @@ install:
 	@$(GO) install github.com/swaggo/swag/cmd/swag@latest
 
 run:
-	GIN_MODE=debug @$(GO) run $(APP_MAIN) run
+	@$(GO) run $(APP_MAIN) run
 
 build:
 	@$(GO) build $(GO_FLAGS) -o $(BIN) $(MAIN_PKG)
@@ -25,6 +24,3 @@ swag:
 
 migrate:
 	@$(GO) run $(APP_MAIN) migrate
-
-gen:
-	@$(GO) run $(APP_MAIN) gen

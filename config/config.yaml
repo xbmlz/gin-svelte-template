@@ -12,3 +12,14 @@ log:
 db:
   driver: sqlite
   url: ./db.sqlite
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password: 123456
+  db: 0
+
+jwt:
+  secret: secret
+  expires_at: 86400
+
