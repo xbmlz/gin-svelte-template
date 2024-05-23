@@ -9,7 +9,7 @@ import (
 
 type LogConfig struct {
 	Path           string `mapstructure:"path" yaml:"path"`
-	Name           string `mapstructure:"path" yaml:"name"`
+	Name           string `mapstructure:"name" yaml:"name"`
 	Level          string `mapstructure:"level" yaml:"level"`
 	MaxAge         int    `mapstructure:"max_age" yaml:"max_age"`
 	RotationTime   int    `mapstructure:"rotation_time" yaml:"rotation_time"`
@@ -37,7 +37,7 @@ var configPath = "config/config.yaml"
 var defaultConfig = Config{
 	Log: &LogConfig{
 		Path:         "logs",
-		Name:         "app.log",
+		Name:         "server",
 		Level:        "debug",
 		MaxAge:       24 * 7,
 		RotationTime: 24,

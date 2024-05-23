@@ -4,7 +4,7 @@ http:
 
 log:
   path: logs
-  name: app.log
+  name: server
   level: debug
   max_age: 168
   rotation_time: 24
