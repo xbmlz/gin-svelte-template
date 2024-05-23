@@ -67,10 +67,10 @@ func NewLogger(conf config.Config) Logger {
 	callerSkip := zap.AddCallerSkip(2)
 	logger := zap.New(core, caller, callerSkip, zap.Development())
 
-	zap.ReplaceGlobals(logger)
-	if _, err := zap.RedirectStdLogAt(logger, zapcore.ErrorLevel); err != nil {
-		panic(err)
-	}
+	//zap.ReplaceGlobals(logger)
+	//if _, err := zap.RedirectStdLogAt(logger, zapcore.ErrorLevel); err != nil {
+	//	panic(err)
+	//}
 
 	return Logger{
 		level: ParseLevel(conf.Log.Level),

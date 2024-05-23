@@ -9,10 +9,10 @@
 - [x] gin
 - [x] cobra
 - [x] swag
-- [ ] gorm
-- [ ] gorm-gen
-- [ ] casbin
+- [x] gorm
+- [x] gorm-gen
 - [ ] jwt
+- [ ] casbin
 - [ ] embed frontend
 
 ## frontend

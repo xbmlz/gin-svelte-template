@@ -2,8 +2,7 @@ package bootstrap
 
 import (
 	"context"
-	"github.com/xbmlz/gin-svelte-template/internal/database"
-
+	"github.com/xbmlz/gin-svelte-template/internal/dal"
 	"github.com/xbmlz/gin-svelte-template/internal/logger"
 	"github.com/xbmlz/gin-svelte-template/internal/server"
 
@@ -16,7 +15,7 @@ var Module = fx.Options(
 		config.NewConfig,
 		logger.NewLogger,
 		server.NewHTTPServer,
-		database.NewDatabase,
+		dal.NewDatabase,
 	),
 	// invoke
 	fx.Invoke(bootstrap),

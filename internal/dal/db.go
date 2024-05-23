@@ -1,4 +1,4 @@
-package database
+package dal
 
 import (
 	"github.com/glebarez/sqlite"
@@ -9,17 +9,11 @@ import (
 	"gorm.io/gorm"
 )
 
-// DB is a database connection.
-type DB struct {
-	ORM *gorm.DB
-}
-
 // NewDatabase creates a new database connection.
-func NewDatabase(conf config.Config, log logger.Logger) DB {
+func NewDatabase(conf config.Config, log logger.Logger) (db *gorm.DB) {
 	var (
 		dsn = conf.DB.DSN
 		err error
-		db  *gorm.DB
 	)
 	switch conf.DB.Driver {
 	case "mysql":
@@ -34,8 +28,5 @@ func NewDatabase(conf config.Config, log logger.Logger) DB {
 	if err != nil {
 		log.Errorf("Failed to connect to database: %v", err)
 	}
-
-	return DB{
-		ORM: db,
-	}
+	return db
 }

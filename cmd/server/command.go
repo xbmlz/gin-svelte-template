@@ -4,10 +4,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/xbmlz/gin-svelte-template/build"
 	"github.com/xbmlz/gin-svelte-template/internal/bootstrap"
-	"github.com/xbmlz/gin-svelte-template/internal/config"
-	"github.com/xbmlz/gin-svelte-template/internal/database"
-	"github.com/xbmlz/gin-svelte-template/internal/logger"
-	"github.com/xbmlz/gin-svelte-template/internal/model"
 	"go.uber.org/fx"
 )
 
@@ -17,7 +13,7 @@ func init() {
 	rootCmd.Version = build.String()
 	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "C", "config.yaml", "config file path")
 
-	for _, cmd := range []*cobra.Command{runCmd, migrateCmd} {
+	for _, cmd := range []*cobra.Command{runCmd} {
 		rootCmd.AddCommand(cmd)
 	}
 }
@@ -37,22 +33,5 @@ var runCmd = &cobra.Command{
 	Long:  `Run the server`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fx.New(bootstrap.Module, fx.NopLogger).Run()
-	},
-}
-
-var migrateCmd = &cobra.Command{
-	Use:   "migrate",
-	Short: "Run migrations",
-	Long:  `Run migrations`,
-	Run: func(cmd *cobra.Command, args []string) {
-		conf := config.NewConfig()
-		log := logger.NewLogger(conf)
-		db := database.NewDatabase(conf, log)
-
-		if err := db.ORM.AutoMigrate(&model.User{}); err != nil {
-			log.Errorf("failed to migrate database: %v", err)
-		}
-
-		log.Info("migrations completed")
 	},
 }
