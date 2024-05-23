@@ -42,7 +42,10 @@ func bootstrap(
 		OnStop: func(ctx context.Context) error {
 			log.Info("Stopping app...")
 
-			httpSrv.Shutdown()
+			err := httpSrv.Shutdown()
+			if err != nil {
+				log.Errorf("Failed to shutdown http server: %v", err)
+			}
 			return nil
 		},
 	})

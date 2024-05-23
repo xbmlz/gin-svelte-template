@@ -16,19 +16,19 @@ const DefaultShutdownTimeout = time.Minute
 
 var _ IServer = (*HTTPServer)(nil)
 
-// Server is gin implementation.
+// HTTPServer Server is gin implementation.
 type HTTPServer struct {
 	srv *http.Server
 }
 
 func NewHTTPServer(log logger.Logger, conf config.Config) HTTPServer {
-	logger := log.GetZapLogger()
+	zapLogger := log.GetZapLogger()
 	// new engine
 	engine := gin.New()
 
-	engine.Use(ginzap.Ginzap(logger, time.DateTime, true))
+	engine.Use(ginzap.Ginzap(zapLogger, time.DateTime, true))
 
-	engine.Use(ginzap.RecoveryWithZap(logger, true))
+	engine.Use(ginzap.RecoveryWithZap(zapLogger, true))
 
 	engine.GET("/ping", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{

@@ -15,7 +15,7 @@ import (
 // A Level is a logging priority. Higher levels are more important.
 type Level int8
 
-// Logger logger interface
+// ILogger Logger logger interface
 type ILogger interface {
 	Debug(v ...any)
 	Debugf(format string, v ...any)

@@ -42,7 +42,6 @@ var defaultConfig = Config{
 
 func NewConfig() Config {
 	config := defaultConfig
-
 	viper.SetConfigFile(configPath)
 
 	if err := viper.ReadInConfig(); err != nil {
@@ -52,6 +51,7 @@ func NewConfig() Config {
 	if err := viper.Unmarshal(&config); err != nil {
 		panic(fmt.Errorf("unable to decode into struct, %v", err))
 	}
+
 	return config
 }
 

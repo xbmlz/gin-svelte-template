@@ -7,7 +7,7 @@
 - [x] zap
 - [x] validator
 - [x] gin
-- [ ] cobra
+- [x] cobra
 - [ ] swag
 - [ ] gorm
 - [ ] gorm-gen
