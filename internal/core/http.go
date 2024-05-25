@@ -1,18 +1,16 @@
-package server
+package core
 
 import (
 	"context"
 	"errors"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/xbmlz/gin-svelte-template/docs"
 	"net/http"
 	"time"
 
-	ginzap "github.com/gin-contrib/zap"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/xbmlz/gin-svelte-template/docs"
+
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
-	"github.com/xbmlz/gin-svelte-template/internal/config"
-	"github.com/xbmlz/gin-svelte-template/internal/logger"
 )
 
 const DefaultShutdownTimeout = time.Minute
@@ -21,17 +19,20 @@ var _ IServer = (*HTTPServer)(nil)
 
 // HTTPServer Server is gin implementation.
 type HTTPServer struct {
-	srv *http.Server
+	srv      *http.Server
+	Engine   *gin.Engine
+	routerV1 *gin.RouterGroup
 }
 
-func NewHTTPServer(log logger.Logger, conf config.Config) HTTPServer {
-	zapLogger := log.GetZapLogger()
+// NewHTTPServer create a new http server
+func NewHTTPServer(log Logger, conf Config) HTTPServer {
+	// zapLogger := log.GetZapLogger()
 	// new engine
 	engine := gin.New()
 
-	engine.Use(ginzap.Ginzap(zapLogger, time.DateTime, true))
+	// engine.Use(ginzap.Ginzap(zapLogger, time.DateTime, true))
 
-	engine.Use(ginzap.RecoveryWithZap(zapLogger, true))
+	// engine.Use(ginzap.RecoveryWithZap(zapLogger, true))
 
 	// swagger doc
 	docs.SwaggerInfo.Host = conf.HTTP.ListenAddr()
@@ -48,6 +49,8 @@ func NewHTTPServer(log logger.Logger, conf config.Config) HTTPServer {
 		})
 	})
 
+	routerV1 := engine.Group("/api/v1")
+
 	engine.Use(gin.Recovery())
 
 	server := HTTPServer{
@@ -55,6 +58,8 @@ func NewHTTPServer(log logger.Logger, conf config.Config) HTTPServer {
 			Addr:    conf.HTTP.ListenAddr(),
 			Handler: engine,
 		},
+		Engine:   engine,
+		routerV1: routerV1,
 	}
 	return server
 }

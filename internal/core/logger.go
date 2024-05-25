@@ -1,4 +1,4 @@
-package logger
+package core
 
 import (
 	"os"
@@ -7,7 +7,6 @@ import (
 	"time"
 
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
-	"github.com/xbmlz/gin-svelte-template/internal/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -47,7 +46,7 @@ const (
 	ErrorLevel
 )
 
-func NewLogger(conf config.Config) Logger {
+func NewLogger(conf Config) Logger {
 	logPath := conf.Log.Path
 	logName := conf.Log.Name
 	maxAge := time.Hour * time.Duration(conf.Log.MaxAge)

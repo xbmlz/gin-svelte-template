@@ -1,4 +1,4 @@
-package server
+package core
 
 // IServer Server is transport server.
 type IServer interface {

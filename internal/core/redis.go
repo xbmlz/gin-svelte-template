@@ -1,19 +1,17 @@
-package cache
+package core
 
 import (
 	"context"
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/xbmlz/gin-svelte-template/internal/config"
-	"github.com/xbmlz/gin-svelte-template/internal/logger"
 )
 
 type Redis struct {
 	client *redis.Client
 }
 
-func NewRedis(conf config.Config, log logger.Logger) Redis {
+func NewRedis(conf Config, log Logger) Redis {
 	addr := conf.Redis.Addr()
 
 	client := redis.NewClient(&redis.Options{

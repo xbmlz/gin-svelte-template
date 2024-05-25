@@ -3,35 +3,37 @@ package bootstrap
 import (
 	"context"
 
-	"github.com/xbmlz/gin-svelte-template/internal/database"
-	"github.com/xbmlz/gin-svelte-template/internal/logger"
-	"github.com/xbmlz/gin-svelte-template/internal/server"
+	"github.com/xbmlz/gin-svelte-template/internal/controller"
+	"github.com/xbmlz/gin-svelte-template/internal/core"
+	"github.com/xbmlz/gin-svelte-template/internal/middleware"
+	"github.com/xbmlz/gin-svelte-template/internal/repo"
+	"github.com/xbmlz/gin-svelte-template/internal/router"
 	"github.com/xbmlz/gin-svelte-template/internal/service"
 
-	"github.com/xbmlz/gin-svelte-template/internal/config"
 	"go.uber.org/fx"
 )
 
 var Module = fx.Options(
-	fx.Provide(
-		config.NewConfig,
-		logger.NewLogger,
-		server.NewHTTPServer,
-		database.NewDatabase,
-	),
+	controller.Module,
+	router.Module,
+	core.Module,
 	service.Module,
+	middleware.Module,
+	repo.Module,
 	// invoke
 	fx.Invoke(bootstrap),
 )
 
 func bootstrap(
 	lc fx.Lifecycle,
-	config config.Config,
-	log logger.Logger,
-	httpSrv server.HTTPServer,
-	database database.Database,
+	conf core.Config,
+	log core.Logger,
+	httpSrv core.HTTPServer,
+	routes router.Routes,
+	middlewares middleware.Middlewares,
+	databdase core.Database,
 ) {
-	db, err := database.DB.DB()
+	db, err := databdase.DB.DB()
 	if err != nil {
 		log.Errorf("Failed to connect to database: %v", err)
 	}
@@ -41,6 +43,9 @@ func bootstrap(
 			log.Info("Starting app...")
 
 			go func() {
+				middlewares.Setup()
+				routes.Setup()
+
 				if err := httpSrv.Start(); err != nil {
 					log.Errorf("Failed to start http server: %v", err)
 				}

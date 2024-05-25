@@ -4,9 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/xbmlz/gin-svelte-template/build"
 	"github.com/xbmlz/gin-svelte-template/internal/bootstrap"
-	"github.com/xbmlz/gin-svelte-template/internal/config"
-	"github.com/xbmlz/gin-svelte-template/internal/database"
-	"github.com/xbmlz/gin-svelte-template/internal/logger"
+	"github.com/xbmlz/gin-svelte-template/internal/core"
 	"github.com/xbmlz/gin-svelte-template/internal/model"
 	"go.uber.org/fx"
 )
@@ -45,9 +43,9 @@ var migrateCmd = &cobra.Command{
 	Short: "Run migrations",
 	Long:  `Run migrations`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := config.NewConfig()
-		log := logger.NewLogger(config)
-		db := database.NewDatabase(config, log)
+		config := core.NewConfig()
+		log := core.NewLogger(config)
+		db := core.NewDatabase(config, log)
 
 		if err := db.DB.AutoMigrate(
 			&model.User{},

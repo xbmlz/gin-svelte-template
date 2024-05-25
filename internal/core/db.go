@@ -1,9 +1,8 @@
-package database
+package core
 
 import (
 	"github.com/glebarez/sqlite"
-	"github.com/xbmlz/gin-svelte-template/internal/config"
-	"github.com/xbmlz/gin-svelte-template/internal/logger"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -14,7 +13,7 @@ type Database struct {
 }
 
 // NewDatabase creates a new database connection.
-func NewDatabase(conf config.Config, log logger.Logger) Database {
+func NewDatabase(conf Config, log Logger) Database {
 	var (
 		dsn = conf.DB.DSN
 		db  *gorm.DB
