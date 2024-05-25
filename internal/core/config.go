@@ -34,9 +34,11 @@ type RedisConfig struct {
 	PoolSize int    `mapstructure:"pool_size" yaml:"pool_size"`
 }
 
-type JWTConfig struct {
-	Secret     string `mapstructure:"secret" yaml:"secret"`
-	ExpireTime int64  `mapstructure:"expire_time" yaml:"expire_time"`
+type AuthConfig struct {
+	Enable          bool     `mapstructure:"enable" yaml:"enable"`
+	TokenSecretKey  string   `mapstructure:"token_secret_key" yaml:"token_secret_key"`
+	TokenExpireTime int64    `mapstructure:"token_expire_time" yaml:"token_expire_time"`
+	IgnorePaths     []string `mapstructure:"ignore_paths" yaml:"ignore_paths"`
 }
 
 type Config struct {
@@ -44,7 +46,7 @@ type Config struct {
 	HTTP  *HTTPConfig  `mapstructure:"http" yaml:"http"`
 	DB    *DBConfig    `mapstructure:"database" yaml:"database"`
 	Redis *RedisConfig `mapstructure:"redis" yaml:"redis"`
-	JWT   *JWTConfig   `mapstructure:"jwt" yaml:"jwt"`
+	Auth  *AuthConfig  `mapstructure:"auth" yaml:"auth"`
 }
 
 var configPath = "config/config.yaml"
@@ -72,9 +74,10 @@ var defaultConfig = Config{
 		DB:       0,
 		PoolSize: 10,
 	},
-	JWT: &JWTConfig{
-		Secret:     "secret",
-		ExpireTime: 3600 * 24 * 7,
+	Auth: &AuthConfig{
+		Enable:          true,
+		TokenSecretKey:  "secret",
+		TokenExpireTime: 3600 * 24 * 7,
 	},
 }
 

@@ -22,8 +22,8 @@ type AuthService struct {
 
 func NewAuthService(log core.Logger, conf core.Config) AuthService {
 	opts := &options{
-		secret:     conf.JWT.Secret,
-		expireTime: conf.JWT.ExpireTime,
+		secret:     conf.Auth.TokenSecretKey,
+		expireTime: conf.Auth.TokenExpireTime,
 	}
 	return AuthService{
 		opts: opts,

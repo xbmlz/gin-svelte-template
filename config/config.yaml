@@ -19,7 +19,12 @@ redis:
   password: 123456
   db: 0
 
-jwt:
-  secret: secret
-  expires_at: 86400
+auth:
+  enable: true
+  token_secret_key: secret
+  token_expire_time: 86400
+  ignore_paths:
+    - /api/v1/login
+    - /api/v1/register
+
 

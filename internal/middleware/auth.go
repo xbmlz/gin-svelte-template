@@ -30,7 +30,15 @@ func NewAuthMiddleware(conf core.Config, handle core.HTTPServer, log core.Logger
 }
 
 func (am AuthMiddleware) core() gin.HandlerFunc {
+
+	ignorePaths := am.conf.Auth.IgnorePaths
+
 	return func(ctx *gin.Context) {
+		if isIgnorePath(ctx.Request.URL.Path, ignorePaths...) {
+			ctx.Next()
+			return
+		}
+
 		tokenString := ExtractToken(ctx)
 		claims, err := am.authService.ParseToken(tokenString)
 		if err != nil {
@@ -52,6 +60,9 @@ func ExtractToken(ctx *gin.Context) (token string) {
 }
 
 func (am AuthMiddleware) Setup() {
+	if !am.conf.Auth.Enable {
+		return
+	}
 	am.handle.Engine.Use(am.core())
-	am.log.Info("AuthMiddleware setup")
+	am.log.Info("AuthMiddleware is setup")
 }

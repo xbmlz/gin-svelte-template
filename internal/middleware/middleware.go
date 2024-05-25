@@ -29,3 +29,15 @@ func (m Middlewares) Setup() {
 		middleware.Setup()
 	}
 }
+
+func isIgnorePath(path string, prefixes ...string) bool {
+	pathLen := len(path)
+
+	for _, p := range prefixes {
+		if pl := len(p); pathLen >= pl && path[:pl] == p {
+			return true
+		}
+	}
+
+	return false
+}
