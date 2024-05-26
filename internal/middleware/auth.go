@@ -30,7 +30,6 @@ func NewAuthMiddleware(conf core.Config, handle core.HTTPServer, log core.Logger
 }
 
 func (am AuthMiddleware) core() gin.HandlerFunc {
-
 	ignorePaths := am.conf.Auth.IgnorePaths
 
 	return func(ctx *gin.Context) {
