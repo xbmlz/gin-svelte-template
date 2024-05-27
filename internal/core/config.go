@@ -60,7 +60,7 @@ var defaultConfig = Config{
 		RotationTime: 24,
 	},
 	HTTP: &HTTPConfig{
-		Host: "0.0.0.0",
+		Host: "127.0.0.1",
 		Port: 8765,
 	},
 	DB: &DBConfig{

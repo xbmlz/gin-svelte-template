@@ -13,14 +13,14 @@ GO=$(GO_ENV) go
 install:
 	@$(GO) install github.com/swaggo/swag/cmd/swag@latest
 
-run:
+run:swag
 	@$(GO) run $(APP_MAIN) run
 
 build:
 	@$(GO) build $(GO_FLAGS) -o $(BIN) $(MAIN_PKG)
 
 swag:
-	@swag init -g $(APP_MAIN) -o ./docs --parseDependency
+	@swag init -g ./cmd/server/main.go -o docs
 
 migrate:
 	@$(GO) run $(APP_MAIN) migrate

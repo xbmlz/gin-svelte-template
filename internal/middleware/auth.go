@@ -15,8 +15,8 @@ var _ IMiddleware = (*AuthMiddleware)(nil)
 
 type AuthMiddleware struct {
 	conf        core.Config
-	handle      core.HTTPServer
 	log         core.Logger
+	handle      core.HTTPServer
 	authService service.AuthService
 }
 
@@ -63,5 +63,5 @@ func (am AuthMiddleware) Setup() {
 		return
 	}
 	am.handle.Engine.Use(am.core())
-	am.log.Info("AuthMiddleware is setup")
+	am.log.Info("Auth middleware is setup")
 }

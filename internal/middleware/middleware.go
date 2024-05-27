@@ -4,6 +4,7 @@ import "go.uber.org/fx"
 
 // Module Middleware exported
 var Module = fx.Options(
+	fx.Provide(NewCorsMiddleware),
 	fx.Provide(NewAuthMiddleware),
 	fx.Provide(NewMiddlewares),
 )
@@ -17,9 +18,10 @@ type IMiddleware interface {
 type Middlewares []IMiddleware
 
 // NewMiddlewares creates a new middlewares
-func NewMiddlewares(authMiddleware AuthMiddleware) Middlewares {
+func NewMiddlewares(authMiddleware AuthMiddleware, corsMiddleware CorsMiddleware) Middlewares {
 	return Middlewares{
 		authMiddleware,
+		corsMiddleware,
 	}
 }
 
