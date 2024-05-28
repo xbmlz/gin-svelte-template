@@ -50,7 +50,7 @@ func (c *UserController) Register(ctx *gin.Context) {
 	err := c.userService.Create(saveUser)
 
 	if err != nil {
-		handler.Response{Code: http.StatusInternalServerError, Message: err.Error()}.JSON(ctx)
+		handler.ResponseError(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -67,7 +67,7 @@ func (c *UserController) Login(ctx *gin.Context) {
 	user, err := c.userService.Login(req.Username, req.Password)
 
 	if err != nil {
-		handler.Response{Code: http.StatusInternalServerError}.JSON(ctx)
+		handler.ResponseError(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
