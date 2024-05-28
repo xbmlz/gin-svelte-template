@@ -103,6 +103,21 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "model.UserRegister": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
         }
     },
     "securityDefinitions": {

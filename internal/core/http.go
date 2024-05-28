@@ -21,7 +21,7 @@ var _ IServer = (*HTTPServer)(nil)
 type HTTPServer struct {
 	srv      *http.Server
 	Engine   *gin.Engine
-	routerV1 *gin.RouterGroup
+	RouterV1 *gin.RouterGroup
 }
 
 // NewHTTPServer create a new http server
@@ -59,7 +59,7 @@ func NewHTTPServer(log Logger, conf Config) HTTPServer {
 			Handler: engine,
 		},
 		Engine:   engine,
-		routerV1: routerV1,
+		RouterV1: routerV1,
 	}
 	return server
 }

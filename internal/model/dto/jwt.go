@@ -3,7 +3,7 @@ package dto
 import "github.com/golang-jwt/jwt/v5"
 
 type AuthClaims struct {
-	ID       string
+	ID       uint
 	Username string
 	jwt.RegisteredClaims
 }

@@ -20,7 +20,7 @@ build:
 	@$(GO) build $(GO_FLAGS) -o $(BIN) $(MAIN_PKG)
 
 swag:
-	@swag init -g ./cmd/server/main.go -o docs
+	@swag init -g $(APP_MAIN)/main.go -o docs
 
 migrate:
 	@$(GO) run $(APP_MAIN) migrate

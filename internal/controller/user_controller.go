@@ -19,14 +19,6 @@ func NewUserController(userService service.UserService) UserController {
 	}
 }
 
-// @tags User
-// @summary User Create
-// @produce application/json
-// @param data body model.User true "User"
-// @success 200 {object} handler.Response "ok"
-// @failure 400 {object} handler.Response "bad request"
-// @failure 500 {object} handler.Response "internal error"
-// @router /api/users [post]
 func (c *UserController) Create(ctx *gin.Context) {
 	req := &model.User{}
 	if err := ctx.ShouldBindJSON(req); err != nil {
@@ -42,4 +34,42 @@ func (c *UserController) Create(ctx *gin.Context) {
 	}
 
 	handler.Response{Code: http.StatusOK}.JSON(ctx)
+}
+
+func (c *UserController) Register(ctx *gin.Context) {
+	req := &model.UserRegister{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		handler.Response{Code: http.StatusBadRequest}.JSON(ctx)
+		return
+	}
+
+	saveUser := &model.User{}
+	saveUser.Username = req.Username
+	saveUser.Password = req.Password
+
+	err := c.userService.Create(saveUser)
+
+	if err != nil {
+		handler.Response{Code: http.StatusInternalServerError, Message: err.Error()}.JSON(ctx)
+		return
+	}
+
+	handler.ResponseSuccess(ctx, nil)
+}
+
+func (c *UserController) Login(ctx *gin.Context) {
+	req := &model.UserLogin{}
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		handler.Response{Code: http.StatusBadRequest}.JSON(ctx)
+		return
+	}
+
+	user, err := c.userService.Login(req.Username, req.Password)
+
+	if err != nil {
+		handler.Response{Code: http.StatusInternalServerError}.JSON(ctx)
+		return
+	}
+
+	handler.ResponseSuccess(ctx, user)
 }

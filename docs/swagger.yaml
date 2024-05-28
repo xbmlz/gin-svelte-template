@@ -30,6 +30,16 @@ definitions:
     - status
     - username
     type: object
+  model.UserRegister:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
 info:
   contact: {}
 paths:

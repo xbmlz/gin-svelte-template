@@ -23,3 +23,18 @@ func (r Response) JSON(ctx *gin.Context) {
 	ctx.JSON(r.Code, r)
 	return
 }
+
+func ResponseSuccess(ctx *gin.Context, data interface{}) {
+	Response{
+		Code:    0,
+		Message: "success",
+		Data:    data,
+	}.JSON(ctx)
+}
+
+func ResponseError(ctx *gin.Context, code int, msg interface{}) {
+	Response{
+		Code:    code,
+		Message: msg,
+	}.JSON(ctx)
+}

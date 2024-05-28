@@ -20,8 +20,10 @@ func NewUserRouter(log core.Logger, srv core.HTTPServer, userController controll
 // Setup setup user router
 func (r UserRouter) Setup() {
 	r.log.Info("user router setup")
-	api := r.srv.Engine.Group("/users")
+	api := r.srv.RouterV1.Group("user")
 	{
 		api.POST("", r.userController.Create)
+		api.POST("register", r.userController.Register)
+		api.POST("login", r.userController.Login)
 	}
 }

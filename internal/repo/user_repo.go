@@ -18,9 +18,10 @@ func NewUserRepo(db core.Database, log core.Logger) UserRepo {
 
 // GetByUsername returns user by username
 func (r UserRepo) GetByUsername(username string) (user *model.User, err error) {
-	user = &model.User{}
-	err = r.db.DB.Where("username = ?", username).First(user).Error
-	return
+	if err = r.db.DB.Where("username = ?", username).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 // Create creates a new user
