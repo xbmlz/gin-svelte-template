@@ -19,6 +19,7 @@ func NewAuthRouter(log core.Logger, srv core.HTTPServer, userController controll
 
 // Setup setup user router
 func (r AuthRouter) Setup() {
+	r.log.Debug("Auth router is setup")
 	api := r.srv.RouterV1
 	{
 		api.POST("register", r.authController.Register)

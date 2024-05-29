@@ -62,6 +62,6 @@ func (am AuthMiddleware) Setup() {
 	if !am.conf.Auth.Enable {
 		return
 	}
-	am.handle.Engine.Use(am.core())
+	am.handle.RouterV1.Use(am.core())
 	am.log.Info("Auth middleware is setup")
 }

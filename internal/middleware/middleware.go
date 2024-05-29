@@ -33,10 +33,18 @@ func (m Middlewares) Setup() {
 }
 
 func isIgnorePath(path string, prefixes ...string) bool {
+	// /api/v1/login
+	// /ui/*
+	// /assets/*
+
 	pathLen := len(path)
 
 	for _, p := range prefixes {
-		if pl := len(p); pathLen >= pl && path[:pl] == p {
+		// if pl := len(p); pathLen >= pl && path[:pl] == p {
+		// 	return true
+		// }
+
+		if pathLen >= len(p) && path[:len(p)] == p {
 			return true
 		}
 	}

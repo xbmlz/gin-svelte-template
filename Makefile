@@ -1,4 +1,4 @@
-.PHONY: install run build swag
+.PHONY: install run build swag ui
 
 VERSION=1.0.0
 BIN=server
@@ -24,3 +24,6 @@ swag:
 
 migrate:
 	@$(GO) run $(APP_MAIN) migrate
+
+ui:
+	@cd ui && pnpm run build
