@@ -1,7 +1,7 @@
 .PHONY: install run build swag
 
 VERSION=1.0.0
-BIN=./bin/server
+BIN=server
 APP_MAIN=./cmd/server
 GO_MODULE=github.com/xbmlz/gin-svelte-template
 

@@ -44,7 +44,7 @@ func (am AuthMiddleware) core() gin.HandlerFunc {
 			handler.Response{Code: http.StatusUnauthorized, Message: err}.JSON(ctx)
 			ctx.Abort()
 		}
-		ctx.Set(constant.CurrentUser, claims)
+		ctx.Set(constant.CurrentUserKey, claims)
 		ctx.Next()
 	}
 }

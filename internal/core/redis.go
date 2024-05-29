@@ -8,7 +8,7 @@ import (
 )
 
 type Redis struct {
-	client *redis.Client
+	Client *redis.Client
 }
 
 func NewRedis(conf Config, log Logger) Redis {
@@ -29,5 +29,5 @@ func NewRedis(conf Config, log Logger) Redis {
 
 	log.Info("Redis connection established")
 
-	return Redis{client: client}
+	return Redis{Client: client}
 }

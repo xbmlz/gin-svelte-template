@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"regexp"
 	"time"
@@ -17,16 +18,18 @@ type options struct {
 }
 
 type AuthService struct {
-	opts *options
+	opts  *options
+	redis core.Redis
 }
 
-func NewAuthService(log core.Logger, conf core.Config) AuthService {
+func NewAuthService(log core.Logger, conf core.Config, redis core.Redis) AuthService {
 	opts := &options{
 		secret:     conf.Auth.TokenSecretKey,
 		expireTime: conf.Auth.TokenExpireTime,
 	}
 	return AuthService{
-		opts: opts,
+		opts,
+		redis,
 	}
 }
 
@@ -47,6 +50,12 @@ func (a AuthService) GenerateToken(user *model.User) (string, error) {
 		return "", err
 	}
 
+	cmd := a.redis.Client.Set(context.Background(), "auth:"+user.Username, token, time.Duration(a.opts.expireTime)*time.Second)
+
+	if cmd.Err() != nil {
+		return "", cmd.Err()
+	}
+
 	return token, nil
 }
 
@@ -64,4 +73,12 @@ func (a AuthService) ParseToken(tokenString string) (*dto.AuthClaims, error) {
 		return nil, err
 	}
 	return token.Claims.(*dto.AuthClaims), nil
+}
+
+func (a AuthService) CleanToken(username string) error {
+	cmd := a.redis.Client.Del(context.Background(), "auth:"+username)
+	if cmd.Err() != nil {
+		return cmd.Err()
+	}
+	return nil
 }

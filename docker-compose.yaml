@@ -1,0 +1,9 @@
+version: "3"
+services:
+  gin-svelte:
+    image: xbmlz/gin-svelte
+    build:
+      context: .
+    ports:
+      - '9080:9080'
+    restart: on-failure

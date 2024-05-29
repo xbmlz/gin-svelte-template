@@ -23,5 +23,6 @@ func (r AuthRouter) Setup() {
 	{
 		api.POST("register", r.authController.Register)
 		api.POST("login", r.authController.Login)
+		api.POST("logout", r.authController.Logout)
 	}
 }

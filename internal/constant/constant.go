@@ -1,6 +1,6 @@
 package constant
 
-const CurrentUser = "current-user"
+const CurrentUserKey = "current-user"
 
 const (
 	StatusEnabled = iota

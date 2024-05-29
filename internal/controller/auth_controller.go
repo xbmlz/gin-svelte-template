@@ -4,8 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xbmlz/gin-svelte-template/internal/constant"
 	"github.com/xbmlz/gin-svelte-template/internal/handler"
 	"github.com/xbmlz/gin-svelte-template/internal/model"
+	"github.com/xbmlz/gin-svelte-template/internal/model/dto"
 	"github.com/xbmlz/gin-svelte-template/internal/service"
 )
 
@@ -83,4 +85,12 @@ func (c *AuthController) Login(ctx *gin.Context) {
 	handler.ResponseSuccess(ctx, gin.H{
 		"token": token,
 	})
+}
+
+func (c *AuthController) Logout(ctx *gin.Context) {
+	claims, exist := ctx.Get(constant.CurrentUserKey)
+	if exist {
+		c.authService.CleanToken(claims.(*dto.AuthClaims).Username)
+	}
+	handler.ResponseSuccess(ctx, nil)
 }
