@@ -30,7 +30,7 @@ func NewAuthService(log core.Logger, conf core.Config) AuthService {
 	}
 }
 
-func (a AuthService) GenerateToken(user model.User) (string, error) {
+func (a AuthService) GenerateToken(user *model.User) (string, error) {
 	expiresAt := time.Now().Add(time.Duration(a.opts.expireTime) * time.Second)
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, dto.AuthClaims{
 		ID:       user.ID,
@@ -59,21 +59,6 @@ func (a AuthService) ParseToken(tokenString string) (*dto.AuthClaims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return []byte(a.opts.secret), nil
 	})
-
-	switch {
-	case token.Valid:
-		err = nil
-	case errors.Is(err, jwt.ErrTokenMalformed):
-		err = errors.New("invalid token")
-	case errors.Is(err, jwt.ErrTokenSignatureInvalid):
-		// Invalid signature
-		err = errors.New("invalid signature")
-	case errors.Is(err, jwt.ErrTokenExpired) || errors.Is(err, jwt.ErrTokenNotValidYet):
-		// Token is either expired or not active yet
-		err = errors.New("token expired")
-	default:
-		err = errors.New("invalid token")
-	}
 
 	if err != nil {
 		return nil, err

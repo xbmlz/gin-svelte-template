@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/xbmlz/gin-svelte-template/internal/constant"
 	"github.com/xbmlz/gin-svelte-template/internal/core"
 	"github.com/xbmlz/gin-svelte-template/internal/errors"
 	"github.com/xbmlz/gin-svelte-template/internal/model"
@@ -40,7 +41,7 @@ func (s UserService) Create(user *model.User) error {
 }
 
 // Login user
-func (s UserService) Login(username, password string) (*model.User, error) {
+func (s UserService) Verify(username, password string) (*model.User, error) {
 	user, err := s.userRepo.GetByUsername(username)
 	if err != nil {
 		return nil, err
@@ -52,6 +53,10 @@ func (s UserService) Login(username, password string) (*model.User, error) {
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
 		return nil, errors.ErrInvalidCredentials
+	}
+
+	if user.Status == constant.StatusDisabled {
+		return nil, errors.ErrUserDisabled
 	}
 
 	return user, nil

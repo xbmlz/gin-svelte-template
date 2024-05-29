@@ -5,25 +5,23 @@ import (
 	"github.com/xbmlz/gin-svelte-template/internal/core"
 )
 
-// UserRouter user router
-type UserRouter struct {
+// AuthRouter user router
+type AuthRouter struct {
 	log            core.Logger
 	srv            core.HTTPServer
-	userController controller.UserController
+	authController controller.AuthController
 }
 
-// NewUserRouter new user router
-func NewUserRouter(log core.Logger, srv core.HTTPServer, userController controller.UserController) UserRouter {
-	return UserRouter{log, srv, userController}
+// NewAuthRouter new user router
+func NewAuthRouter(log core.Logger, srv core.HTTPServer, userController controller.AuthController) AuthRouter {
+	return AuthRouter{log, srv, userController}
 }
 
 // Setup setup user router
-func (r UserRouter) Setup() {
-	r.log.Info("user router setup")
-	api := r.srv.RouterV1.Group("user")
+func (r AuthRouter) Setup() {
+	api := r.srv.RouterV1
 	{
-		api.POST("", r.userController.Create)
-		api.POST("register", r.userController.Register)
-		api.POST("login", r.userController.Login)
+		api.POST("register", r.authController.Register)
+		api.POST("login", r.authController.Login)
 	}
 }
