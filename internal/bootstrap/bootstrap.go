@@ -31,9 +31,9 @@ func bootstrap(
 	httpSrv core.HTTPServer,
 	routes router.Routes,
 	middlewares middleware.Middlewares,
-	databdase core.Database,
+	database core.Database,
 ) {
-	db, err := databdase.DB.DB()
+	db, err := database.DB.DB()
 	if err != nil {
 		log.Errorf("Failed to connect to database: %v", err)
 	}
@@ -56,9 +56,12 @@ func bootstrap(
 		OnStop: func(ctx context.Context) error {
 			log.Info("Stopping app...")
 
-			db.Close()
+			err := db.Close()
+			if err != nil {
+				return err
+			}
 
-			err := httpSrv.Shutdown()
+			err = httpSrv.Shutdown()
 			if err != nil {
 				log.Errorf("Failed to shutdown http server: %v", err)
 			}

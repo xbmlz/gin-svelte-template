@@ -3,17 +3,16 @@ package router
 import (
 	"embed"
 	"fmt"
-	"io/fs"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/xbmlz/gin-svelte-template/internal/core"
 	"github.com/xbmlz/gin-svelte-template/ui"
+	"io/fs"
+	"net/http"
 )
 
-const UIIndexFilePath = "dist/index.html"
-const UIRootFilePath = "dist"
-const UIAssetsPath = "dist/assets"
+const UIIndexFilePath = "build/index.html"
+const UIRootFilePath = "build"
+const UIAssetsPath = "build/_app"
 
 type UIRouter struct {
 	log core.Logger
@@ -38,9 +37,11 @@ func NewUIRouter(log core.Logger, srv core.HTTPServer) UIRouter {
 func (r UIRouter) Setup() {
 	r.log.Debug("UI router is setup")
 
+	//r.srv.Engine.Use(static.Serve("/", static.EmbedFolder(ui.UIBuild, UIRootFilePath)))
+
 	// handle the static file by default ui static files
-	r.srv.Engine.StaticFS("/assets", http.FS(&_resource{
-		fs: ui.UIDist,
+	r.srv.Engine.StaticFS("/_app", http.FS(&_resource{
+		fs: ui.UIBuild,
 	}))
 
 	r.srv.Engine.NoRoute(func(c *gin.Context) {
@@ -48,15 +49,15 @@ func (r UIRouter) Setup() {
 		filePath := ""
 
 		switch urlPath {
-		case "/favicon.svg":
-			c.Header("content-type", "image/svg+xml")
+		case "/favicon.png":
+			c.Header("content-type", "image/png")
 		default:
 			filePath = UIIndexFilePath
 			c.Header("content-type", "text/html;charset=utf-8")
 			c.Header("X-Frame-Options", "DENY")
 		}
 
-		file, err := ui.UIDist.ReadFile(filePath)
+		file, err := ui.UIBuild.ReadFile(filePath)
 
 		if err != nil {
 			r.log.Error(err)

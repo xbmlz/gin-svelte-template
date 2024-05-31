@@ -5,5 +5,5 @@ import (
 	_ "embed"
 )
 
-//go:embed dist
-var UIDist embed.FS
+//go:embed build/*
+var UIBuild embed.FS
