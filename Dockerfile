@@ -8,6 +8,8 @@ WORKDIR /src
 
 ADD . /src
 
+RUN apk --no-cache add build-base git bash nodejs npm && npm install -g pnpm@8.9.2
+
 RUN make build
 
 
@@ -27,7 +29,10 @@ RUN apk update \
 
 COPY --from=builder /src/server /app
 COPY --from=builder /src/config.yaml /app
+COPY --from=builder /src/script/entrypoint.sh /app
 
-EXPOSE 9080
+WORKDIR /app
+
+EXPOSE 8765
 
 ENTRYPOINT ["/entrypoint.sh"]

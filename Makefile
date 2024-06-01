@@ -1,4 +1,4 @@
-.PHONY: install run build swag ui
+.PHONY: install run build swag ui-build ui-dev
 
 VERSION=1.0.0
 BIN=server
@@ -16,8 +16,8 @@ install:
 run:swag
 	@$(GO) run $(APP_MAIN) run
 
-build:
-	@$(GO) build $(GO_FLAGS) -o $(BIN) $(MAIN_PKG)
+build:ui-build
+	@$(GO) build $(GO_FLAGS) -o $(BIN) $(APP_MAIN)
 
 swag:
 	@swag init -g $(APP_MAIN)/main.go -o docs
@@ -25,5 +25,8 @@ swag:
 migrate:
 	@$(GO) run $(APP_MAIN) migrate
 
-ui:
+ui-build:
 	@cd ui && pnpm run build
+
+ui-dev:
+	@cd ui && pnpm run dev

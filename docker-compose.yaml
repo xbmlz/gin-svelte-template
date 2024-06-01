@@ -1,9 +1,10 @@
 version: "3"
 services:
   gin-svelte:
-    image: xbmlz/gin-svelte
+    image: xbmlz/gin-svelte-template:latest
+    container_name: gin-svelte-template
     build:
       context: .
     ports:
-      - '9080:9080'
+      - '3000:8765'
     restart: on-failure
