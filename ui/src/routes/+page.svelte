@@ -1,3 +1,8 @@
+<script lang="ts">
+	
+</script>
+
 <main class="p-4">
-    content
+    main
+    <button ></button>
 </main>
